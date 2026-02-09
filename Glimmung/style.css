@@ -1,0 +1,108 @@
+body {
+    margin: 0;
+    background: #ffe9ff;
+    font-family: "Poppins", sans-serif;
+    color: #4a1f68;
+}
+
+/* HEADER */
+header {
+    background: linear-gradient(135deg, #364476, #4d619c, #6a75ba);
+    padding: 40px;
+    text-align: center;
+    color: white;
+    font-size: 35px;
+    font-weight: bold;
+    text-shadow: 2px 2px 6px #6d3f9d;
+    border-bottom: 4px solid #ffffff;
+}
+
+.subtitle {
+    font-size: 18px;
+    margin-top: 5px;
+    letter-spacing: 1px;
+}
+
+/* NAVIGATION */
+nav {
+    background: #ffffff;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    padding: 15px;
+}
+
+nav a {
+    color: #ffdaff;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    color: white;
+    text-shadow: 0px 0px 8px #ffb3ff;
+}
+
+/* CONTENT */
+.container {
+    padding: 40px;
+    max-width: 950px;
+    margin: auto;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 15px;
+    padding: 25px;
+    margin-bottom: 35px;
+    box-shadow: 0px 4px 20px rgba(120, 0, 150, 0.2);
+    border: 3px solid #d69aff;
+}
+
+h2 {
+    color: #8c3acb;
+    text-shadow: 1px 1px 4px #f4cfff;
+}
+
+.sparkle {
+    font-size: 22px;
+    color: #ff9aff;
+}
+
+/* LISTS */
+.idea-list, .shop-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.idea-list li, .shop-list li {
+    background: #fbe4ff;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    border-left: 5px solid #c47bff;
+}
+
+/* GALLERY */
+.gallery {
+    display: grid;
+    gap: 15px;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.gallery img {
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.2);
+}
+
+/* FOOTER */
+footer {
+    text-align: center;
+    background: #7b3fa3;
+    color: #ffd6ff;
+    padding: 20px;
+    margin-top: 40px;
+    border-top: 4px solid #b46cff;
+}
