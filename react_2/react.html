@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Saved Page</title>
+
+<!-- React CDN -->
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>✨ React Interactive Ideas ✨</header>
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+function RoomIdeas(){
+
+const [ideas,setIdeas] = React.useState([
+"LED fairy lights",
+"Plushie shelves",
+"Neon moon lamp"
+]);
+
+const [newIdea,setNewIdea] = React.useState("");
+
+const addIdea = (event) =>{
+event.preventDefault();
+
+if(newIdea !== ""){
+setIdeas([...ideas,newIdea]);
+setNewIdea("");
+}
+}
+
+const removeIdea = (ideaToRemove)=>{
+setIdeas(ideas.filter(idea => idea !== ideaToRemove));
+}
+
+return(
+
+<div className="container">
+
+<h2>Room Ideas List</h2>
+
+{/* CONDITIONAL RENDERING */}
+
+{ideas.length === 0 ? (
+<p>No ideas yet ✨</p>
+) : (
+
+<ul>
+
+{/* RENDERING LISTS */}
+
+{ideas.map((idea,index)=>(
+<li key={index}>
+{idea}
+
+<button onClick={()=>removeIdea(idea)}>
+Delete
+</button>
+
+</li>
+))}
+
+</ul>
+
+)}
+
+{/* FORM */}
+
+<form onSubmit={addIdea}>
+
+<input
+type="text"
+placeholder="Add new idea"
+value={newIdea}
+onChange={(e)=>setNewIdea(e.target.value)}
+/>
+
+<button type="submit">
+Add Idea
+</button>
+
+</form>
+
+</div>
+
+);
+
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<RoomIdeas/>)
+
+</script>
+
+</body>
+</html>
