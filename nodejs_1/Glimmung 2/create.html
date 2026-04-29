@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Create Post</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+
+<body>
+
+<header>✨ Create Your Post ✨</header>
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+function CreatePost(){
+
+const [title,setTitle] = React.useState("");
+const [desc,setDesc] = React.useState("");
+const [image,setImage] = React.useState(null);
+
+const handleSubmit = (e)=>{
+e.preventDefault();
+
+if(!title || !desc) return;
+
+const newPost = {
+title,
+desc,
+image
+};
+
+// 💾 SAVE (localStorage)
+const existing = JSON.parse(localStorage.getItem("posts")) || [];
+existing.push(newPost);
+localStorage.setItem("posts", JSON.stringify(existing));
+
+alert("Post created 💖");
+
+setTitle("");
+setDesc("");
+setImage(null);
+};
+
+// 📷 IMAGE UPLOAD
+const handleImage = (e)=>{
+const file = e.target.files[0];
+if(file){
+setImage(URL.createObjectURL(file));
+}
+};
+
+return(
+
+<div className="container">
+
+<div className="card">
+
+<h2>Create a Cute Post 🌸</h2>
+
+<form onSubmit={handleSubmit}>
+
+<input
+type="text"
+placeholder="Title..."
+value={title}
+onChange={(e)=>setTitle(e.target.value)}
+/>
+
+<br/><br/>
+
+<textarea
+placeholder="Description..."
+value={desc}
+onChange={(e)=>setDesc(e.target.value)}
+/>
+
+<br/><br/>
+
+<input type="file" onChange={handleImage}/>
+
+<br/><br/>
+
+{image && <img src={image} style={{width:"90%", borderRadius:"10px"}}/>}
+
+<br/><br/>
+
+<button type="submit">Post ✨</button>
+
+</form>
+
+</div>
+
+</div>
+
+);
+
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<CreatePost/>)
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Saved Page</title>
+
+<!-- React CDN -->
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>✨ React Interactive Ideas ✨</header>
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+function RoomIdeas(){
+
+// 🟣 ARRAY (Rendering Lists requirement)
+const [ideas,setIdeas] = React.useState([
+{id:1, text:"LED fairy lights"},
+{id:2, text:"Plushie shelves"},
+{id:3, text:"Neon moon lamp"}
+]);
+
+const [newIdea,setNewIdea] = React.useState("");
+const [favorites,setFavorites] = React.useState([]);
+
+// 🟢 FORM
+const addIdea = (event) =>{
+event.preventDefault();
+
+if(newIdea !== ""){
+setIdeas([...ideas, {id: Date.now(), text:newIdea}]);
+setNewIdea("");
+}
+}
+
+// 🔴 FILTER (Rendering Lists + extra rubric power)
+const removeIdea = (id)=>{
+setIdeas(ideas.filter(idea => idea.id !== id));
+}
+
+// 💖 EVENT HANDLING
+const addFavorite = (idea)=>{
+setFavorites([...favorites, idea]);
+}
+
+return(
+
+<div className="container">
+
+<h2>🌸 Room Ideas</h2>
+
+{/* ✅ CONDITIONAL RENDERING */}
+{ideas.length === 0 ? (
+<p>No ideas yet ✨</p>
+) : (
+
+<ul>
+
+{/* ✅ RENDERING LISTS */}
+{ideas.map((idea)=>(
+<li key={idea.id} style={{marginBottom:"10px"}}>
+
+{idea.text}
+
+<button onClick={()=>removeIdea(idea.id)}>
+❌
+</button>
+
+<button onClick={()=>addFavorite(idea)}>
+💖
+</button>
+
+</li>
+))}
+
+</ul>
+
+)}
+
+{/* ✅ FORM */}
+<form onSubmit={addIdea}>
+
+<input
+type="text"
+placeholder="Add new idea"
+value={newIdea}
+onChange={(e)=>setNewIdea(e.target.value)}
+/>
+
+<button type="submit">
+Add Idea
+</button>
+
+</form>
+
+<hr/>
+
+<h2>💖 Favorites</h2>
+
+{/* ✅ CONDITIONAL + MAP AGAIN */}
+{favorites.length === 0 ? (
+<p>No favorites yet ✨</p>
+) : (
+<ul>
+{favorites.map((fav,index)=>(
+<li key={index}>{fav.text}</li>
+))}
+</ul>
+)}
+
+</div>
+
+);
+
+}
+
+// Render
+ReactDOM.createRoot(document.getElementById("root")).render(<RoomIdeas/>)
+
+</script>
+
+</body>
+</html>

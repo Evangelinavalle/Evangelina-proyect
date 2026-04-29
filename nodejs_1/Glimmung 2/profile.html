@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Create Profile</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body class="profile-page">
+
+<header class="profile-header">👤 Create Your Profile</header>
+
+<div class="container">
+
+<div class="profile-card">
+
+<h2>Profile Setup</h2>
+
+<form id="profile-form">
+    <label for="username">Username:</label>
+    <input type="text" id="username" placeholder="Your username" required>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" placeholder="you@example.com" required>
+
+    <label for="bio">Bio:</label>
+    <textarea id="bio" placeholder="Tell us about yourself..." rows="4"></textarea>
+
+    <button type="submit">Save Profile</button>
+</form>
+
+<h3 id="saved-profile"></h3>
+
+<a href="index.html">⬅ Back to Home</a>
+
+</div>
+
+</div>
+
+<script>
+const form = document.getElementById("profile-form");
+const savedProfile = document.getElementById("saved-profile");
+
+// Load saved profile if exists
+let profile = JSON.parse(localStorage.getItem("profile")) || null;
+
+function renderProfile() {
+    if(profile) {
+        savedProfile.innerHTML = `
+            <strong>Username:</strong> ${profile.username}<br>
+            <strong>Email:</strong> ${profile.email}<br>
+            <strong>Bio:</strong> ${profile.bio}
+        `;
+    }
+}
+
+renderProfile();
+
+form.onsubmit = function(e) {
+    e.preventDefault();
+    profile = {
+        username: document.getElementById("username").value,
+        email: document.getElementById("email").value,
+        bio: document.getElementById("bio").value
+    };
+    localStorage.setItem("profile", JSON.stringify(profile));
+    renderProfile();
+    form.reset();
+}
+</script>
+
+</body>
+</html>

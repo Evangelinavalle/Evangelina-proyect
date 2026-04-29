@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Forum - Glimmung</title>
+
+<link rel="stylesheet" href="style.css">
+
+<!-- React CDN -->
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+</head>
+
+<body>
+
+<header>💬 Glimmung Forum</header>
+
+<div id="root"></div>
+
+<script type="text/babel">
+
+function Forum(){
+
+const [posts,setPosts] = React.useState([
+{
+id:1,
+author:"Karol_Ch",
+content:"What is your favorite aesthetic style? ✨",
+likes:0,
+comments:[]
+}
+]);
+
+const [newPost,setNewPost] = React.useState("");
+const [newComments,setNewComments] = React.useState({});
+
+// ➕ ADD POST
+const addPost = (e)=>{
+e.preventDefault();
+
+if(newPost.trim() === "") return;
+
+setPosts([
+{
+id:Date.now(),
+author:"You",
+content:newPost,
+likes:0,
+comments:[]
+},
+...posts
+]);
+
+setNewPost("");
+};
+
+// ❤️ LIKE POST
+const likePost = (id)=>{
+setPosts(posts.map(p =>
+p.id === id ? {...p, likes:p.likes+1} : p
+));
+};
+
+// 💬 ADD COMMENT
+const addComment = (postId)=>{
+if(!newComments[postId]) return;
+
+setPosts(posts.map(post=>{
+if(post.id === postId){
+return{
+...post,
+comments:[
+...post.comments,
+{
+id:Date.now(),
+text:newComments[postId]
+}
+]
+}
+}
+return post;
+}));
+
+setNewComments({...newComments,[postId]:""});
+};
+
+return(
+
+<div className="container">
+
+<h2>💖 Community Forum</h2>
+
+{/* FORM */}
+<form onSubmit={addPost}>
+<input
+value={newPost}
+onChange={(e)=>setNewPost(e.target.value)}
+placeholder="Share something cute..."
+/>
+<button type="submit">Post ✨</button>
+</form>
+
+<hr/>
+
+{/* CONDITIONAL RENDERING */}
+{posts.length === 0 ? (
+<p>No posts yet ✨</p>
+) : (
+
+posts.map(post => (
+
+<div className="card" key={post.id}>
+
+<h3>{post.author}</h3>
+<p>{post.content}</p>
+
+<button onClick={()=>likePost(post.id)}>
+❤️ {post.likes}
+</button>
+
+{/* COMMENTS */}
+<div style={{marginTop:"10px"}}>
+
+{post.comments.length === 0 ? (
+<p>No comments yet</p>
+) : (
+post.comments.map(c=>(
+<p key={c.id}>💬 {c.text}</p>
+))
+)}
+
+<input
+value={newComments[post.id] || ""}
+onChange={(e)=>setNewComments({...newComments,[post.id]:e.target.value})}
+placeholder="Add comment..."
+/>
+
+<button onClick={()=>addComment(post.id)}>
+Reply
+</button>
+
+</div>
+
+</div>
+
+))
+
+)}
+
+</div>
+
+);
+
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<Forum/>)
+
+</script>
+
+<div id="global-player">
+
+<audio id="global-audio" controls></audio>
+
+</div>
+</body>
+</html>
