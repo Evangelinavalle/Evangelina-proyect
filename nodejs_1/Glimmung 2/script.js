@@ -4,97 +4,66 @@ const SITE_NAME = "Glimmung";
 
 const savedImages = [];
 
-const favorites = document.getElementById("favorites");
-const likeButtons = document.getElementsByClassName("like-btn");
-const allImages = document.getElementsByTagName("img");
-
-// 🟣 HEADER ON LOAD
-window.onload = function () {
+document.addEventListener("DOMContentLoaded", () => {
 
     console.log(SITE_NAME + " page loaded!");
 
+    // 🟣 HEADER
     const header = document.querySelector("header");
-
-    header.style.color = "#ff9aff";
-    header.setAttribute("data-loaded", "true");
-};
-
-
-// 💜 FAVORITES SYSTEM
-for (let i = 0; i < likeButtons.length; i++) {
-
-    likeButtons[i].onclick = function () {
-
-        const image = this.parentElement.querySelector("img");
-        const clone = image.cloneNode(true);
-
-        if (favorites.children.length === 1) {
-            favorites.innerHTML = "";
-        }
-
-        favorites.appendChild(clone);
-        savedImages.push(image.src);
-    };
-}
-
-
-// ✨ IMAGE HOVER EFFECT
-for (let i = 0; i < allImages.length; i++) {
-
-    allImages[i].onmouseover = function () {
-        this.style.transform = "scale(1.1)";
-        this.style.transition = "0.3s";
-    };
-
-    allImages[i].onmouseout = function () {
-        this.style.transform = "scale(1)";
-    };
-}
-
-
-// 💜 FAVORITES MESSAGE
-function checkFavorites(amount, limit) {
-
-    if (amount > limit) {
-        return "You saved MANY ideas ✨";
-    } else if (amount > 0) {
-        return "Cute collection 💜";
-    } else {
-        return "Start saving ideas 🌸";
+    if (header) {
+        header.style.color = "#ff9aff";
+        header.setAttribute("data-loaded", "true");
     }
-}
 
-let timer = setTimeout(showSuggestion, 6000);
+    // 💜 ELEMENTS
+    const favorites = document.getElementById("favorites");
+    const likeButtons = document.getElementsByClassName("like-btn");
+    const allImages = document.getElementsByTagName("img");
 
-function showSuggestion() {
+    // 💜 FAVORITES SYSTEM
+    for (let i = 0; i < likeButtons.length; i++) {
 
-    const message = checkFavorites(savedImages.length, 5);
+        likeButtons[i].onclick = function () {
 
-    let msg = document.createElement("p");
-    msg.textContent = message;
-    msg.style.color = "#ff9aff";
+            const image = this.parentElement.querySelector("img");
+            if (!image || !favorites) return;
 
-    favorites.appendChild(msg);
+            const clone = image.cloneNode(true);
 
-    clearTimeout(timer);
-}
+            if (favorites.children.length === 1) {
+                favorites.innerHTML = "";
+            }
 
+            favorites.appendChild(clone);
+            savedImages.push(image.src);
+        };
+    }
 
-// 💰 DYNAMIC PRICES
-const prices = document.getElementsByClassName("item-price");
+    // ✨ IMAGE HOVER EFFECT
+    for (let i = 0; i < allImages.length; i++) {
 
-for (let i = 0; i < prices.length; i++) {
+        allImages[i].onmouseover = function () {
+            this.style.transform = "scale(1.1)";
+            this.style.transition = "0.3s";
+        };
 
-    let basePrice = parseFloat(prices[i].textContent.replace("$", ""));
-    let newPrice = (basePrice + Math.random() * 3).toFixed(2);
+        allImages[i].onmouseout = function () {
+            this.style.transform = "scale(1)";
+        };
+    }
 
-    prices[i].textContent = "$" + newPrice;
-}
+    // 💰 DYNAMIC PRICES
+    const prices = document.getElementsByClassName("item-price");
 
+    for (let i = 0; i < prices.length; i++) {
 
-// 🛒 CART SYSTEM (CLEAN + FIXED)
-document.addEventListener("DOMContentLoaded", function () {
+        let basePrice = parseFloat(prices[i].textContent.replace("$", ""));
+        let newPrice = (basePrice + Math.random() * 3).toFixed(2);
 
+        prices[i].textContent = "$" + newPrice;
+    }
+
+    // 🛒 CART SYSTEM
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
 
     const items = document.getElementsByClassName("gallery-item");
@@ -109,9 +78,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         btn.onclick = function () {
 
-            let title = items[i].querySelector(".item-title").textContent;
-            let price = items[i].querySelector(".item-price").textContent;
-            let img = items[i].querySelector("img").src;
+            let title = items[i].querySelector(".item-title")?.textContent;
+            let price = items[i].querySelector(".item-price")?.textContent;
+            let img = items[i].querySelector("img")?.src;
+
+            if (!title || !price || !img) return;
 
             const existingItem = cart.find(item => item.title === title);
 
@@ -140,41 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
     }
 
-});
-
-
-// 🎵 MUSIC PLAYER (BASIC SAFE VERSION)
-function searchSong() {
-
-
-   let query = document.getElementById("searchInput").value;
-
-
-   if (query.trim() === "") return;
-
-
-   let embedURL = "https://www.youtube.com/embed?listType=search&list="
-       + encodeURIComponent(query) + "&autoplay=1";
-
-
-   let player = document.getElementById("player");
-
-
-   player.src = "";
-
-
-   setTimeout(() => {
-       player.src = embedURL;
-   }, 300);
-
-
-   document.getElementById("current-song").textContent =
-       "🎵 Playing: " + query;
-}
-
-// ENTER KEY SEARCH
-document.addEventListener("DOMContentLoaded", function () {
-
+    // 🎵 ENTER KEY SEARCH
     const input = document.getElementById("searchInput");
 
     if (input) {
@@ -184,27 +121,88 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    // 🎵 PLAYLIST
+    const audio = document.getElementById("audio");
+    const playlist = document.querySelectorAll("#playlist li");
+    const currentSong = document.getElementById("current-song");
+
+    if (audio && playlist.length > 0 && currentSong) {
+
+        playlist.forEach(song => {
+
+            song.addEventListener("click", function(){
+
+                playlist.forEach(s => s.classList.remove("active"));
+
+                this.classList.add("active");
+
+                const file = this.getAttribute("data-src");
+
+                audio.src = file;
+                audio.play();
+
+                currentSong.textContent = "🎶 Now playing: " + this.textContent;
+
+            });
+
+        });
+    }
+
+    // ⏱ FAVORITES MESSAGE TIMER
+    setTimeout(showSuggestion, 6000);
+
 });
-const audio = document.getElementById("audio");
-const playlist = document.querySelectorAll("#playlist li");
-const currentSong = document.getElementById("current-song");
 
-playlist.forEach(song => {
 
-song.addEventListener("click", function(){
+// 💜 FAVORITES MESSAGE
+function checkFavorites(amount, limit) {
 
-// quitar active
-playlist.forEach(s => s.classList.remove("active"));
+    if (amount > limit) {
+        return "You saved MANY ideas ✨";
+    } else if (amount > 0) {
+        return "Cute collection 💜";
+    } else {
+        return "Start saving ideas 🌸";
+    }
+}
 
-this.classList.add("active");
+function showSuggestion() {
 
-const file = this.getAttribute("data-src");
+    const favorites = document.getElementById("favorites");
+    if (!favorites) return;
 
-audio.src = file;
-audio.play();
+    const message = checkFavorites(savedImages.length, 5);
 
-currentSong.textContent = "🎶 Now playing: " + this.textContent;
+    let msg = document.createElement("p");
+    msg.textContent = message;
+    msg.style.color = "#ff9aff";
 
-});
+    favorites.appendChild(msg);
+}
 
-});
+
+// 🎵 MUSIC SEARCH
+function searchSong() {
+
+    let input = document.getElementById("searchInput");
+    let player = document.getElementById("player");
+    let current = document.getElementById("current-song");
+
+    if (!input || !player || !current) return;
+
+    let query = input.value;
+
+    if (query.trim() === "") return;
+
+    let embedURL = "https://www.youtube.com/embed?listType=search&list="
+        + encodeURIComponent(query) + "&autoplay=1";
+
+    player.src = "";
+
+    setTimeout(() => {
+        player.src = embedURL;
+    }, 300);
+
+    current.textContent = "🎵 Playing: " + query;
+}
