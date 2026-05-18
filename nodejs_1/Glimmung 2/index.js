@@ -21,7 +21,7 @@ const server = http.createServer((req, res) => {
 
     if (req.url === "/") {
         res.writeHead(200, { "Content-Type": "text/plain" });
-        res.end("Server running 💜");
+        res.end("Server running ");
     }
 
     else if (req.url === "/api") {
